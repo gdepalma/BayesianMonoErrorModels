@@ -1,4 +1,4 @@
-diagnostics=function(xgrid,xobs,yobs,xcens,ycens,acceptCoef,MICDens,fitMat,coefMat){
+logistic_diagnostic=function(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCoef,xtrue,coefMat){
 
   xobs1=xobs
   yobs1=yobs
@@ -26,13 +26,7 @@ diagnostics=function(xgrid,xobs,yobs,xcens,ycens,acceptCoef,MICDens,fitMat,coefM
     scale_x_continuous(breaks = seq(min(xobs1)-1,max(xobs1)+1,by=1),
                        labels = c(paste("<",min(xobs1),sep=''),seq(min(xobs1),max(xobs1),by=1), paste(">",max(xobs1),sep='')),
                        limits = c(min(xobs1)-1,max(xobs1)+1))+
-    theme_fivethirtyeight()+
-    theme(axis.line = element_line(colour = "black"),
-          panel.grid.major = element_line(color='gray90'),
-          panel.grid.minor = element_blank(),
-          axis.text=element_text(size=11),
-          axis.title=element_text(size=11),
-          plot.title=element_text(size=15))+
+    theme_dbets()+
     labs(title='',y='',x=expression(MIC~(log["2"]~ug/mL)))
 
   ### MIC/DIA Relationship
@@ -52,36 +46,32 @@ diagnostics=function(xgrid,xobs,yobs,xcens,ycens,acceptCoef,MICDens,fitMat,coefM
     scale_y_continuous(breaks = seq(min(yobs1)-1,max(yobs1)+1,by=1),
                        labels = c(paste("<",min(yobs1),sep=''),seq(min(yobs1),max(yobs1),by=1), paste(">",max(yobs1),sep='')),
                        limits = c(min(yobs1)-1,max(yobs1)+1))+
-    theme_fivethirtyeight()+
-    theme(axis.line = element_line(colour = "black"),
-          legend.position='none',
-          panel.grid.major = element_line(color='gray90'),
-          panel.grid.minor = element_blank(),
-          axis.text.x=element_text(size=11),
-          axis.text.y=element_text(size=8),
-          axis.title=element_text(size=11),
-          plot.title=element_text(size=15))+
+    theme_dbets()+
     labs(title='Logistic Model',y='DIA (mm)',x="")
 
 
-  # plt1 <- ggplot_gtable(ggplot_build(pltRel))
-  # plt2 <- ggplot_gtable(ggplot_build(pltDens))
-  # maxWidth = unit.pmax(plt1$widths[2:3], plt2$widths[2:3])
-  # plt1$widths[2:3] <- maxWidth
-  # plt2$widths[2:3] <- maxWidth
-  # plot(grid.arrange(plt1, plt2, ncol=1, heights=c(5,2)))
+  plt1 <- ggplot_gtable(ggplot_build(pltRel))
+  plt2 <- ggplot_gtable(ggplot_build(pltDens))
+  maxWidth = unit.pmax(plt1$widths[2:3], plt2$widths[2:3])
+  plt1$widths[2:3] <- maxWidth
+  plt2$widths[2:3] <- maxWidth
+  plot(grid.arrange(plt1, plt2, ncol=1, heights=c(5,2)))
 
   par(mfrow=c(2,1))
   xtrue_mean=apply(xtrue_sav,2,mean)
   hist(xtrue_mean,freq=FALSE)
   hist(xobs,freq=FALSE)
 
-  mean(acceptCoef)
+  cat("Mean Coefficients Acceptance: ",mean(acceptCoef),"\n")
+
+
+  par(mfrow=c(1,1))
+
   tmp=gather(data.frame(coefMat),val)
   tmp$idx=rep(1:nrow(coefMat),4)
 
   ggplot(tmp,aes(x=idx,y=value))+geom_line()+facet_wrap(~val,scales='free_y')
 
-  return(list(plt1=plt1,plt2=plt2))
+  return(invisible())
 
 }

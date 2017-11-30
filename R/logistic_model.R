@@ -1,9 +1,13 @@
-bayesian_mon_errors_logistic=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgrid,xsig=.707,ysig=2.121,numIter=20000,burnin=numIter/2,thin=4){
+bayesian_mon_errors_logistic=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgrid,xsig=.707,ysig=2.121,
+                                      numIter=20000,burnin=numIter/2,thin=4){
 
   fitMat=matrix(nrow=numIter-burnin,ncol=length(xgrid))
   MICDens=matrix(nrow=numIter-burnin,ncol=length(xgrid))
+  coefMat=matrix(nrow=numIter,ncol=4)
 
   for(iter in 1:numIter){
+
+    if(iter%%1000==0) cat('Iteration: ',iter,'\n')
 
     ## Update Density
     if(iter %% 500==0 | iter==1){
@@ -11,7 +15,7 @@ bayesian_mon_errors_logistic=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xg
         parms=updateDens(xtrue,state=0,first=TRUE,niter=1000,xgrid)
         mu=parms$mu; sigma=parms$sigma; p=parms$p; state=parms$state;
         dens=parms$densEst; k=length(p); groups=parms$groups
-      else{
+      }else{
         parms=updateDens(xtrue,state,first=FALSE,niter=250,xgrid)
         mu=parms$mu; sigma=parms$sigma; p=parms$p; state=parms$state;
         dens=parms$densEst; k=length(p); groups=parms$groups
@@ -32,7 +36,6 @@ bayesian_mon_errors_logistic=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xg
 
     ###save
     coefMat[iter,]=coefs
-    post[iter]=sum(getLLK(xobs,yobs,xtrue,ytrue,xcens,ycens,xsig,ysig))
     if(iter>burnin){
       fit=getylogtrue(coefs,xgrid)
       fitMat[iter-burnin,]=fit
