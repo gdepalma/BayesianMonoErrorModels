@@ -1,5 +1,5 @@
 bayesian_mon_errors_logistic=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgrid,xsig=.707,ysig=2.121,
-                                      numIter=20000,burnin=numIter/2,thin=4){
+                                      numIter=26000,burnin=10000,thin=4){
 
   fitMat=matrix(nrow=numIter-burnin,ncol=length(xgrid))
   MICDens=matrix(nrow=numIter-burnin,ncol=length(xgrid))

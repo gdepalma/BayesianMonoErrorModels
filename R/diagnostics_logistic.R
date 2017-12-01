@@ -1,4 +1,4 @@
-logistic_diagnostic=function(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCoef,xtrue,coefMat){
+logistic_diagnostic=function(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCoef,xtrue_sav,coefMat){
 
   xobs1=xobs
   yobs1=yobs
@@ -41,13 +41,14 @@ logistic_diagnostic=function(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCo
     # geom_vline(xintercept=MICBrkptL+.5,lty=2,alpha=.5)+
     # geom_vline(xintercept=MICBrkptU-.5,lty=2,alpha=.5)+
     scale_x_continuous(breaks = seq(min(xobs1)-1,max(xobs1)+1,by=1),
-                       labels = c(paste("<",min(xobs1),sep=''),seq(min(xobs1),max(xobs1),by=1), paste(">",max(xobs1),sep='')),
-                       limits = c(min(xobs1)-1,max(xobs1)+1))+
+                       labels = c(paste("<",min(xobs1),sep=''),seq(min(xobs1),max(xobs1),by=1), paste(">",max(xobs1),sep='')))+
+                       # limits = c(min(xobs1)-1,max(xobs1)+1))+
     scale_y_continuous(breaks = seq(min(yobs1)-1,max(yobs1)+1,by=1),
-                       labels = c(paste("<",min(yobs1),sep=''),seq(min(yobs1),max(yobs1),by=1), paste(">",max(yobs1),sep='')),
-                       limits = c(min(yobs1)-1,max(yobs1)+1))+
+                       labels = c(paste("<",min(yobs1),sep=''),seq(min(yobs1),max(yobs1),by=1), paste(">",max(yobs1),sep='')))+
+                       # limits = c(min(yobs1)-1,max(yobs1)+1))+
     theme_dbets()+
-    labs(title='Logistic Model',y='DIA (mm)',x="")
+    labs(title='Logistic Model',y='DIA (mm)',x="")+
+    coord_cartesian(ylim =c(min(yobs)-1,max(yobs)+1))
 
 
   plt1 <- ggplot_gtable(ggplot_build(pltRel))

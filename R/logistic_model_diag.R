@@ -1,10 +1,11 @@
 bayesian_mon_errors_logistic_diag=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgrid,xsig=.707,ysig=2.121,
-                                           numIter=20000,burnin=numIter/2,thin=4){
+                                           numIter=26000,burnin=10000,thin=4){
 
   fitMat=matrix(nrow=numIter-burnin,ncol=length(xgrid))
   MICDens=matrix(nrow=numIter-burnin,ncol=length(xgrid))
   coefMat=matrix(nrow=numIter,ncol=4)
   acceptCoef=rep(NA,numIter)
+  xtrue_sav=matrix(nrow=numIter-burnin,ncol=length(xobs))
 
 
   for(iter in 1:numIter){
@@ -42,6 +43,7 @@ bayesian_mon_errors_logistic_diag=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytr
       fit=getylogtrue(coefs,xgrid)
       fitMat[iter-burnin,]=fit
       MICDens[iter-burnin,]=dens
+      xtrue_sav[iter-burnin,]=xtrue
     }
 
   }
@@ -53,7 +55,7 @@ bayesian_mon_errors_logistic_diag=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytr
   acceptCoef=acceptCoef[burnin:numIter]
   coefMat=coefMat[burnin:numIter,]
 
-  return(list(MICDens=MICDens,fitMat=fitMat,acceptCoef=acceptCoef,coefMat=coefMat))
+  return(list(MICDens=MICDens,fitMat=fitMat,acceptCoef=acceptCoef,coefMat=coefMat,xtrue_sav=xtrue_sav))
 
 }
 
