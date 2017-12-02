@@ -6,6 +6,7 @@ bayesian_mon_errors_logistic_diag=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytr
   coefMat=matrix(nrow=numIter,ncol=4)
   acceptCoef=rep(NA,numIter)
   xtrue_sav=matrix(nrow=numIter-burnin,ncol=length(xobs))
+  nobs=length(xobs)
 
 
   for(iter in 1:numIter){
