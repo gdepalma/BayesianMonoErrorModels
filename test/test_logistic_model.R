@@ -20,5 +20,5 @@ coefMat=parms$coefMat; xtrue_sav=parms$xtrue_sav
 logistic_diagnostic(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCoef,xtrue_sav,coefMat)
 
 parms=bayesian_mon_errors_logistic(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgrid)
-
+MICDens=parms$MICDens; fitMat=parms$fitMat
 
