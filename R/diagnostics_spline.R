@@ -1,4 +1,6 @@
-logistic_diagnostic=function(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCoef,smothCoef,xtrue_sav,coefMat){
+spline_diagnostic=function(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCoef,xtrue_sav,coefMat,
+                           smoothAccept,smoothParam_sav){
+
 
   xobs1=xobs
   yobs1=yobs
@@ -21,8 +23,6 @@ logistic_diagnostic=function(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCo
 
   pltDens=ggplot(densDat,aes(x=xgrid,y))+geom_line(color='darkblue')+
     geom_ribbon(aes(ymin=lower, ymax=upper),alpha=.5,fill='cyan4')+
-    # geom_vline(xintercept=MICBrkptL+.5,lty=2,alpha=.5)+
-    # geom_vline(xintercept=MICBrkptU-.5,lty=2,alpha=.5)+
     scale_x_continuous(breaks = seq(min(xobs1)-1,max(xobs1)+1,by=1),
                        labels = c(paste("<",min(xobs1),sep=''),seq(min(xobs1),max(xobs1),by=1), paste(">",max(xobs1),sep='')),
                        limits = c(min(xobs1)-1,max(xobs1)+1))+
@@ -38,16 +38,12 @@ logistic_diagnostic=function(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCo
   pltRel=ggplot(data=a1,aes(x=xobs,y=yobs,label=Freq))+geom_text(size=3.2,color='black')+
     geom_line(data=gxDat,aes(x=xgrid,y=y),color='darkblue',inherit.aes = FALSE)+
     geom_ribbon(data=gxDat,aes(x=xgrid,ymin=lower, ymax=upper),fill='cyan4',alpha=.5,inherit.aes = FALSE)+
-    # geom_vline(xintercept=MICBrkptL+.5,lty=2,alpha=.5)+
-    # geom_vline(xintercept=MICBrkptU-.5,lty=2,alpha=.5)+
     scale_x_continuous(breaks = seq(min(xobs1)-1,max(xobs1)+1,by=1),
                        labels = c(paste("<",min(xobs1),sep=''),seq(min(xobs1),max(xobs1),by=1), paste(">",max(xobs1),sep='')))+
-                       # limits = c(min(xobs1)-1,max(xobs1)+1))+
     scale_y_continuous(breaks = seq(min(yobs1)-1,max(yobs1)+1,by=1),
                        labels = c(paste("<",min(yobs1),sep=''),seq(min(yobs1),max(yobs1),by=1), paste(">",max(yobs1),sep='')))+
-                       # limits = c(min(yobs1)-1,max(yobs1)+1))+
     theme_dbets()+
-    labs(title='Logistic Model',y='DIA (mm)',x="")+
+    labs(title='Spline Model',y='DIA (mm)',x="")+
     coord_cartesian(ylim =c(min(yobs)-1,max(yobs)+1))
 
 
@@ -64,16 +60,22 @@ logistic_diagnostic=function(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCo
   hist(xobs,freq=FALSE)
 
   cat("Mean Coefficients Acceptance: ",mean(acceptCoef),"\n")
-  cat("Mean Smooth Acceptance: ",mean(smothCoef),"\n")
+  cat("Mean Smooth Acceptance: ",mean(smoothAccept),"\n")
 
 
 
   par(mfrow=c(1,1))
 
   tmp=gather(data.frame(coefMat),val)
-  tmp$idx=rep(1:nrow(coefMat),4)
+  tmp$idx=rep(1:nrow(coefMat),ncol(coefMat))
 
-  ggplot(tmp,aes(x=idx,y=value))+geom_line()+facet_wrap(~val,scales='free_y')
+  plt=ggplot(tmp,aes(x=idx,y=value))+geom_line()+facet_wrap(~val,scales='free_y')
+  plot(plt)
+
+  tmp=data.frame(idx=1:length(smoothParam_sav),value=smoothParam_sav)
+  plt=ggplot(tmp,aes(x=idx,y=value))+geom_line()+labs(title='Smooth Parameter')
+  plot(plt)
+
 
   return(invisible())
 

@@ -18,7 +18,7 @@ bayesian_mon_errors_logistic=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xg
         mu=parms$mu; sigma=parms$sigma; p=parms$p; state=parms$state;
         dens=parms$densEst; k=length(p); groups=parms$groups
       }else{
-        parms=updateDens(xtrue,state,first=FALSE,niter=250,xgrid)
+        parms=updateDens(xtrue,state,first=FALSE,niter=125,xgrid)
         mu=parms$mu; sigma=parms$sigma; p=parms$p; state=parms$state;
         dens=parms$densEst; k=length(p); groups=parms$groups
       }

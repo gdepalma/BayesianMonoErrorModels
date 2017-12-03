@@ -71,7 +71,8 @@ logistic_diagnostic=function(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCo
   tmp=gather(data.frame(coefMat),val)
   tmp$idx=rep(1:nrow(coefMat),4)
 
-  ggplot(tmp,aes(x=idx,y=value))+geom_line()+facet_wrap(~val,scales='free_y')
+  plt=ggplot(tmp,aes(x=idx,y=value))+geom_line()+facet_wrap(~val,scales='free_y')
+  plot(plt)
 
   return(invisible())
 

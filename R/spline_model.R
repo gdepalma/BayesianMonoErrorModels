@@ -1,23 +1,16 @@
-bayesian_mon_errors_spline_diag=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgrid,lowept,upperept,knotseq,bases,designMatrixGrid,
+bayesian_mon_errors_spline=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgrid,lowept,upperept,knotseq,bases,designMatrixGrid,
                                     xsig=.707,ysig=2.121,numIter=26000,burnin=10000,thin=4){
 
 
-  xsig=.707;ysig=2.121;numIter=26000;burnin=10000;thin=4
   fitMat=matrix(nrow=numIter-burnin,ncol=length(xgrid))
   MICDens=matrix(nrow=numIter-burnin,ncol=length(xgrid))
   coefMat=matrix(nrow=numIter,ncol=length(coefs))
-  acceptCoef=rep(NA,numIter)
-  xtrue_sav=matrix(nrow=numIter-burnin,ncol=length(xobs))
-  smoothAccept=rep(NA,numIter)
-  smoothParam_sav=rep(NA,numIter)
   nobs=length(xobs)
 
   smoothParam=1
 
 
   for(iter in 1:numIter){
-
-    if(iter%%1000==0) cat('Iteration: ',iter,'\n')
 
 
     ## Update Density
@@ -66,13 +59,7 @@ bayesian_mon_errors_spline_diag=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue
   MICDens=MICDens[seq(1,nrow(MICDens),by=thin),]
   fitMat=fitMat[seq(1,nrow(fitMat),by=thin),]
 
-  acceptCoef=acceptCoef[burnin:numIter]
-  smoothAccept=smoothAccept[burnin:numIter]
-  smoothParam_sav=smoothParam_sav[burnin:numIter]
-
-
-  return(list(MICDens=MICDens,fitMat=fitMat,acceptCoef=acceptCoef,smoothAccept=smoothAccept,
-              smoothParam_sav=smoothParam_sav,coefMat=coefMat,xtrue_sav=xtrue_sav))
+  return(list(MICDens=MICDens,fitMat=fitMat))
 
 }
 

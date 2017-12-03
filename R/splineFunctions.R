@@ -1,12 +1,12 @@
 
 
-getPRIORLLK_Spline_Spline=function(coefs,smoothSpline){
+getPRIORLLK_spline=function(coefs,smoothParam){
 
-  priorPcoef=dunif(smoothSpline,0,3,log=T)
+  priorPcoef=dunif(smoothParam,0,2,log=T)
 
   lpriorcoef = dlnorm(coefs[length(coefs)],1,100,log=T)
   for(i in (length(coefs)-1):1)
-    lpriorcoef=lpriorcoef+dnorm(log(coefs[i]),coefs[i+1],smoothSpline,log=T)
+    lpriorcoef=lpriorcoef+dnorm(log(coefs[i]),coefs[i+1],smoothParam,log=T)
 
   return(priorPcoef+lpriorcoef)
 }
@@ -82,7 +82,7 @@ updateSplineXtrue=function(xtrue,ytrue,mu,sigma,p,k,groups,knotseq,bases,lowept,
 }
 
 
-updateSplineCoefs=function(smoothSpline,coefs,iter,
+updateSplineCoefs=function(smoothParam,coefs,iter,
                  bases,xtrue,ytrue,knotseq,xobs,yobs,xcens,ycens,xsig,ysig,coefMat){
 
   if(iter<1000){
@@ -101,9 +101,9 @@ updateSplineCoefs=function(smoothSpline,coefs,iter,
 
   #log likelihood and priors
   oldLLK=sum(getLLK(xobs,yobs,xtrue,ytrue,xcens,ycens,xsig,ysig))
-  oldPRIORLLK=sum(getPRIORLLK_Spline(coefs,smoothSpline))
+  oldPRIORLLK=sum(getPRIORLLK_spline(coefs,smoothParam))
   newLLK=sum(getLLK(xobs,yobs,xtrue,newY,xcens,ycens,xsig,ysig))
-  newPRIORLLK=sum(getPRIORLLK_Spline(propCoef,smoothSpline))
+  newPRIORLLK=sum(getPRIORLLK_spline(propCoef,smoothParam))
 
   #accept/reject
   A=newLLK+newPRIORLLK-oldLLK-oldPRIORLLK
@@ -117,21 +117,21 @@ updateSplineCoefs=function(smoothSpline,coefs,iter,
 
 }
 
-updateSmoothParm=function(smoothSpline,coefs){
+updateSmoothParm=function(smoothParam,coefs){
 
   accept=0
-  propSmooth=rnorm(1,smoothSpline,.2)
+  propSmooth=rnorm(1,smoothParam,.2)
   if(propSmooth<0 | propSmooth>2)
-    return(list(smooth=smoothSpline,accept=accept))
-  oldPRIORLLK=sum(getPRIORLLK_Spline(coefs,smoothSpline))
-  newPRIORLLK=sum(getPRIORLLK_Spline(coefs,propSmooth))
+    return(list(smooth=smoothParam,accept=accept))
+  oldPRIORLLK=sum(getPRIORLLK_spline(coefs,smoothParam))
+  newPRIORLLK=sum(getPRIORLLK_spline(coefs,propSmooth))
   #accept/reject
   if(log(runif(1)) < newPRIORLLK-oldPRIORLLK){
-    smoothSpline=propSmooth
+    smoothParam=propSmooth
     accept=1
   }
 
-  return(list(smooth=smoothSpline,accept=accept))
+  return(list(smooth=smoothParam,accept=accept))
 }
 
 # updateMeasErrorM=function(xsig,ysig,xobs,yobs,xtrue,ytrue,xcens,ycens){

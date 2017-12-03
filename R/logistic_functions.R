@@ -46,7 +46,7 @@ updateLogCoef=function(iter,coefs,xobs,yobs,xtrue,xcens,ycens,ytrue,xsig,ysig,co
   accept=0
   if(is.na(llike)) llike=-99
   #Acceptance and make sure coeffecients are positive
-  if(log(runif(1)) < llike & length(which(coefsa>0))==length(coefsa))
+  if(log(runif(1)) < llike & sum(coefsa>0)==4)
   {
     accept=1
     coefs = coefsa

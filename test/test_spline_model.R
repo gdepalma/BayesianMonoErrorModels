@@ -13,16 +13,18 @@ coefs=parms$coefs
 ytrue=as.numeric(parms$ytrue)
 lowept=parms$lowept
 upperept=parms$upperept
+knotseq=parms$knotseq
+bases=parms$bases
 designMatrixGrid=parms$designMatrixGrid
 
 ### Run
-parms=bayesian_mon_errors_spline_diag(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgrid,lowept,upperept,designMatrixGrid)
-MICDens=parms$MICDens; fitMat=parms$fitMat; acceptCoef=parms$acceptCoef
-coefMat=parms$coefMat; xtrue_sav=parms$xtrue_sav
+parms=bayesian_mon_errors_spline_diag(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgrid,lowept,upperept,knotseq,bases,designMatrixGrid)
+MICDens=parms$MICDens; fitMat=parms$fitMat; acceptCoef=parms$acceptCoef; smoothAccept=parms$smoothAccept
+coefMat=parms$coefMat; xtrue_sav=parms$xtrue_sav; smoothParam_sav=parms$smoothParam_sav
 
 
-spline_diagnostic(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCoef,xtrue_sav,coefMat)
+spline_diagnostic(xgrid,xobs,yobs,xcens,ycens,MICDens,fitMat,acceptCoef,xtrue_sav,coefMat,smoothAccept,smoothParam_sav)
 
-# parms=bayesian_mon_errors_spline(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgrid,lowept,upperept)
+parms=bayesian_mon_errors_spline(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgrid,lowept,upperept,knotseq,bases,designMatrixGrid)
 
 
