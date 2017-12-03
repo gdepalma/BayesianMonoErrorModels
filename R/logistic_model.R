@@ -4,7 +4,7 @@ bayesian_mon_errors_logistic=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xg
   fitMat=matrix(nrow=numIter-burnin,ncol=length(xgrid))
   MICDens=matrix(nrow=numIter-burnin,ncol=length(xgrid))
   coefMat=matrix(nrow=numIter,ncol=4)
-  # acceptCoef=rep(NA,numIter)
+  acceptCoef=rep(NA,numIter)
   # xtrue_sav=matrix(nrow=numIter-burnin,ncol=length(xobs))
   nobs=length(xobs)
 
