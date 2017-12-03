@@ -1,7 +1,7 @@
 
-a1=read_csv(file='test/data1.csv')
+a1=read_csv(file='test/ERTEB.csv')
 
-parms=parse_file(a1,logMIC=FALSE)
+parms=parse_file(a1,logMIC=TRUE)
 xobs=parms$xobs; yobs=parms$yobs; xcens=parms$xcens; ycens=parms$ycens
 
 ### Initialize

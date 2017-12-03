@@ -27,7 +27,7 @@ bayesian_mon_errors_logistic_diag=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytr
     }
 
     ### Update xtrue (and corresponding ytrue)
-    if(iter %% 25==0 | iter==1){
+    if(iter %% 15==0 | iter==1){
       parms=updateXtrueLog(xtrue,ytrue,coefs,xcens,ycens,xsig,ysig,xobs,yobs,
            nobs,mu,sigma,k,p,groups)
       xtrue=parms$xtrue; ytrue=as.numeric(parms$ytrue)

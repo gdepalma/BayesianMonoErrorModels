@@ -27,7 +27,7 @@ bayesian_mon_errors_spline=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgri
     }
 
     ### Update xtrue (and corresponding ytrue)
-    if(iter %% 25==0 | iter==1){
+    if(iter %% 15==0 | iter==1){
       parms=updateSplineXtrue(xtrue,ytrue,mu,sigma,p,k,groups,knotseq,bases,lowept,upperept,coefs,xcens,
                             ycens,xsig,ysig,xobs,yobs,nobs)
       xtrue=parms$xtrue; ytrue=as.numeric(parms$ytrue);
