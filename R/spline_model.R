@@ -1,5 +1,5 @@
 bayesian_mon_errors_spline=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgrid,lowept,upperept,knotseq,bases,designMatrixGrid,
-                                    xsig=.707,ysig=2.121,numIter=26000,burnin=10000,thin=4){
+                                    xsig=.707,ysig=2.121,numIter=22000,burnin=14000,thin=4){
 
 
   fitMat=matrix(nrow=numIter-burnin,ncol=length(xgrid))
