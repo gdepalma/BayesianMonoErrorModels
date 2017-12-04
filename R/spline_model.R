@@ -43,7 +43,7 @@ bayesian_mon_errors_spline=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgri
 
     ### update smoothness parameter
     parms=updateSmoothParm(smoothParam,coefs)
-    smoothParam=parms$smooth; smoothAccept[iter]=parms$accept
+    smoothParam=parms$smooth
 
     smoothParam_sav[iter]=smoothParam
     coefMat[iter,]=log(coefs)
