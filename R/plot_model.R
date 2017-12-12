@@ -1,4 +1,4 @@
-output_graph_one_mode=function(list_of_draws,xgrid,dat_sav,MICBrkptL,MICBrkptU){
+output_graph_one_model_twoMIC_test=function(list_of_draws,xgrid,dat_sav,MICBrkptL,MICBrkptU){
 
 
   xobs=dat_sav$xobs
@@ -85,7 +85,7 @@ output_graph_one_mode=function(list_of_draws,xgrid,dat_sav,MICBrkptL,MICBrkptU){
 
 }
 
-output_graph_one_model_oneMIC=function(list_of_draws,xgrid,dat_sav,MICBrkpt){
+output_graph_one_model_oneMIC_test=function(list_of_draws,xgrid,dat_sav,MICBrkpt){
 
 
   xobs=dat_sav$xobs
@@ -140,179 +140,6 @@ output_graph_one_model_oneMIC=function(list_of_draws,xgrid,dat_sav,MICBrkpt){
   pltRel=ggplot(data=a1,aes(x=xobs,y=yobs,label=Freq))+geom_text(size=3.2,color='black')+
     geom_line(data=gxDat,aes(x=xgrid,y=y),color='darkblue',inherit.aes = FALSE)+
     geom_ribbon(data=gxDat,aes(x=xgrid,ymin=lower, ymax=upper),fill='cyan4',alpha=.5,inherit.aes = FALSE)+
-    geom_vline(xintercept=MICBrkpt+.5,lty=2,alpha=.5)+
-    scale_x_continuous(breaks = seq(min(xobs1)-1,max(xobs1)+1,by=1),
-                       labels = c(paste("<",min(xobs1),sep=''),seq(min(xobs1),max(xobs1),by=1), paste(">",max(xobs1),sep='')),
-                       limits = c(min(xobs1)-1,max(xobs1)+1))+
-    scale_y_continuous(breaks = seq(min(yobs1)-1,max(yobs1)+1,by=1),
-                       labels = c(paste("<",min(yobs1),sep=''),seq(min(yobs1),max(yobs1),by=1), paste(">",max(yobs1),sep='')),
-                       limits = c(min(yobs1)-1,max(yobs1)+1))+
-    theme_fivethirtyeight()+
-    theme(axis.line = element_line(colour = "black"),
-          legend.position='none',
-          panel.grid.major = element_line(color='gray90'),
-          panel.grid.minor = element_blank(),
-          axis.text.x=element_text(size=11),
-          axis.text.y=element_text(size=8),
-          axis.title=element_text(size=11),
-          plot.title=element_text(size=15))+
-    labs(title='Logistic Model',y='DIA (mm)',x="")
-
-
-  plt1 <- ggplot_gtable(ggplot_build(pltRel))
-  plt2 <- ggplot_gtable(ggplot_build(pltDens))
-  maxWidth = unit.pmax(plt1$widths[2:3], plt2$widths[2:3])
-  plt1$widths[2:3] <- maxWidth
-  plt2$widths[2:3] <- maxWidth
-  plot(grid.arrange(plt1, plt2, ncol=1, heights=c(5,2)))
-
-  return(invisible())
-
-}
-
-output_graph_compare_twoMIC=function(list_of_draws_logistic,list_of_draws_spline,xgrid,dat_sav,MICBrkptL,MICBrkptU){
-
-
-  xobs=dat_sav$xobs
-  yobs=dat_sav$yobs
-  xcensl=dat_sav$xcensl
-  xcensu=dat_sav$xcensu
-  ycensl=dat_sav$ycensl
-  ycensu=dat_sav$ycensu
-
-  xobs1=xobs
-  yobs1=yobs
-  xobs[xcensu==1 & xobs==max(xobs)]=max(xobs)+1
-  xobs[xcensl==1 & xobs==min(xobs)]=min(xobs)-1
-  yobs[ycensu==1 & yobs==max(yobs)]=max(yobs)+1
-  yobs[ycensl==1 & yobs==min(yobs)]=min(yobs)-1
-  a1=data.frame(table(xobs,yobs))
-  a1$xobs=as.numeric(as.character(a1$xobs))
-  a1$yobs=as.numeric(as.character(a1$yobs))
-  a1=a1[a1$Freq>0,]
-
-
-
-  ### MIC Density
-  MIC_Dens_Logistic=list_of_draws_logistic$MIC_Dens
-  densDat_Logistic=data_frame(xgrid,y=apply(MIC_Dens_Logistic,2,mean),type='Logistic')
-  MIC_Dens_Spline=list_of_draws_spline$MIC_Dens
-  densDat_Spline=data_frame(xgrid,y=apply(MIC_Dens_Spline,2,mean),type='Spline')
-
-  a2 = rbind(densDat_Logistic,densDat_Spline)
-
-  pltDens=ggplot(a1,aes(x=xgrid,color=type))+geom_line()+
-    geom_vline(xintercept=MICBrkptL+.5,lty=2,alpha=.5)+
-    geom_vline(xintercept=MICBrkptU-.5,lty=2,alpha=.5)+
-    scale_x_continuous(breaks = seq(min(xobs1)-1,max(xobs1)+1,by=1),
-                       labels = c(paste("<",min(xobs1),sep=''),seq(min(xobs1),max(xobs1),by=1), paste(">",max(xobs1),sep='')),
-                       limits = c(min(xobs1)-1,max(xobs1)+1))+
-    theme_fivethirtyeight()+
-    theme(axis.line = element_line(colour = "black"),
-          panel.grid.major = element_line(color='gray90'),
-          panel.grid.minor = element_blank(),
-          axis.text=element_text(size=11),
-          axis.title=element_text(size=11),
-          plot.title=element_text(size=15))+
-    labs(title='',y='',x=expression(MIC~(log["2"]~ug/mL)))
-
-  ### MIC/DIA Relationship
-  gx_logistic=list_of_draws_logistic$gx
-  gxDat_logistic=data_frame(xgrid,y=apply(gx_logistic,2,mean),type='logistic')
-  gx_spline=list_of_draws_spline$gx
-  gxDat_spline=data_frame(xgrid,y=apply(gx_spline,2,mean),type='spline')
-
-  a2 = rbind(gxDat_logistic,gxDat_spline)
-
-
-  pltRel=ggplot(data=a1,aes(x=xobs,y=yobs,label=Freq))+geom_text(size=3.2,color='black')+
-    geom_line(data=a1,aes(x=xgrid,y=y,color=type),inherit.aes = FALSE)+
-    geom_vline(xintercept=MICBrkptL+.5,lty=2,alpha=.5)+
-    geom_vline(xintercept=MICBrkptU-.5,lty=2,alpha=.5)+
-    scale_x_continuous(breaks = seq(min(xobs1)-1,max(xobs1)+1,by=1),
-                       labels = c(paste("<",min(xobs1),sep=''),seq(min(xobs1),max(xobs1),by=1), paste(">",max(xobs1),sep='')),
-                       limits = c(min(xobs1)-1,max(xobs1)+1))+
-    scale_y_continuous(breaks = seq(min(yobs1)-1,max(yobs1)+1,by=1),
-                       labels = c(paste("<",min(yobs1),sep=''),seq(min(yobs1),max(yobs1),by=1), paste(">",max(yobs1),sep='')),
-                       limits = c(min(yobs1)-1,max(yobs1)+1))+
-    theme_fivethirtyeight()+
-    theme(axis.line = element_line(colour = "black"),
-          legend.position='none',
-          panel.grid.major = element_line(color='gray90'),
-          panel.grid.minor = element_blank(),
-          axis.text.x=element_text(size=11),
-          axis.text.y=element_text(size=8),
-          axis.title=element_text(size=11),
-          plot.title=element_text(size=15))+
-    labs(title='Logistic Model',y='DIA (mm)',x="")
-
-
-  plt1 <- ggplot_gtable(ggplot_build(pltRel))
-  plt2 <- ggplot_gtable(ggplot_build(pltDens))
-  maxWidth = unit.pmax(plt1$widths[2:3], plt2$widths[2:3])
-  plt1$widths[2:3] <- maxWidth
-  plt2$widths[2:3] <- maxWidth
-  plot(grid.arrange(plt1, plt2, ncol=1, heights=c(5,2)))
-
-  return(invisible())
-
-}
-
-output_graph_compare_oneMIC=function(list_of_draws_logistic,list_of_draws_spline,xgrid,dat_sav,MICBrkpt){
-
-
-  xobs=dat_sav$xobs
-  yobs=dat_sav$yobs
-  xcensl=dat_sav$xcensl
-  xcensu=dat_sav$xcensu
-  ycensl=dat_sav$ycensl
-  ycensu=dat_sav$ycensu
-
-  xobs1=xobs
-  yobs1=yobs
-  xobs[xcensu==1 & xobs==max(xobs)]=max(xobs)+1
-  xobs[xcensl==1 & xobs==min(xobs)]=min(xobs)-1
-  yobs[ycensu==1 & yobs==max(yobs)]=max(yobs)+1
-  yobs[ycensl==1 & yobs==min(yobs)]=min(yobs)-1
-  a1=data.frame(table(xobs,yobs))
-  a1$xobs=as.numeric(as.character(a1$xobs))
-  a1$yobs=as.numeric(as.character(a1$yobs))
-  a1=a1[a1$Freq>0,]
-
-
-
-  ### MIC Density
-  MIC_Dens_Logistic=list_of_draws_logistic$MIC_Dens
-  densDat_Logistic=data_frame(xgrid,y=apply(MIC_Dens_Logistic,2,mean),type='Logistic')
-  MIC_Dens_Spline=list_of_draws_spline$MIC_Dens
-  densDat_Spline=data_frame(xgrid,y=apply(MIC_Dens_Spline,2,mean),type='Spline')
-
-  a2 = rbind(densDat_Logistic,densDat_Spline)
-
-  pltDens=ggplot(a1,aes(x=xgrid,color=type))+geom_line()+
-    geom_vline(xintercept=MICBrkpt+.5,lty=2,alpha=.5)+
-    scale_x_continuous(breaks = seq(min(xobs1)-1,max(xobs1)+1,by=1),
-                       labels = c(paste("<",min(xobs1),sep=''),seq(min(xobs1),max(xobs1),by=1), paste(">",max(xobs1),sep='')),
-                       limits = c(min(xobs1)-1,max(xobs1)+1))+
-    theme_fivethirtyeight()+
-    theme(axis.line = element_line(colour = "black"),
-          panel.grid.major = element_line(color='gray90'),
-          panel.grid.minor = element_blank(),
-          axis.text=element_text(size=11),
-          axis.title=element_text(size=11),
-          plot.title=element_text(size=15))+
-    labs(title='',y='',x=expression(MIC~(log["2"]~ug/mL)))
-
-  ### MIC/DIA Relationship
-  gx_logistic=list_of_draws_logistic$gx
-  gxDat_logistic=data_frame(xgrid,y=apply(gx_logistic,2,mean),type='logistic')
-  gx_spline=list_of_draws_spline$gx
-  gxDat_spline=data_frame(xgrid,y=apply(gx_spline,2,mean),type='spline')
-
-  a2 = rbind(gxDat_logistic,gxDat_spline)
-
-  pltRel=ggplot(data=a1,aes(x=xobs,y=yobs,label=Freq))+geom_text(size=3.2,color='black')+
-    geom_line(data=a1,aes(x=xgrid,y=y,color=type),inherit.aes = FALSE)+
     geom_vline(xintercept=MICBrkpt+.5,lty=2,alpha=.5)+
     scale_x_continuous(breaks = seq(min(xobs1)-1,max(xobs1)+1,by=1),
                        labels = c(paste("<",min(xobs1),sep=''),seq(min(xobs1),max(xobs1),by=1), paste(">",max(xobs1),sep='')),

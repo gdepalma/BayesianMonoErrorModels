@@ -45,12 +45,12 @@ bayesian_mon_errors_spline=function(xobs,yobs,xcens,ycens,coefs,xtrue,ytrue,xgri
     parms=updateSmoothParm(smoothParam,coefs)
     smoothParam=parms$smooth
 
-    smoothParam_sav[iter]=smoothParam
+    # smoothParam_sav[iter]=smoothParam
     coefMat[iter,]=log(coefs)
     if(iter>burnin){
       fitMat[iter-burnin,]=coefs%*%t(designMatrixGrid)
       MICDens[iter-burnin,]=dens
-      xtrue_sav[iter-burnin,]=xtrue
+      # xtrue_sav[iter-burnin,]=xtrue
     }
 
   }
