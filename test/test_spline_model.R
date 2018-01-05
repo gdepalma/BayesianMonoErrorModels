@@ -1,8 +1,11 @@
+library(BayesianMonoErrorModels)
 
 a1=read_csv(file='test/ERTEB.csv')
 
 parms=parse_file(a1,logMIC=TRUE)
 xobs=parms$xobs; yobs=parms$yobs; xcens=parms$xcens; ycens=parms$ycens
+
+run_spline_model(xobs,yobs,xcens,ycens)
 
 ### Initialize
 nobs=length(xobs)

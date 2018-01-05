@@ -3,5 +3,5 @@ exportPattern("^[[:alpha:]]+")
 #' @import Rcpp
 #' @import tidyverse
 #' @import scales
-useDynLib(BayesianMonoErrorModels, .registration = TRUE)
+useDynLib(BayesianMonoErrorModels)
 
