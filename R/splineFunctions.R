@@ -51,7 +51,7 @@ getIsplineC=function(xtrue,knotseq,bases){
   storage.mode(xtrue) <- "double"
   storage.mode(numBases) <- "integer"
   storage.mode(lxtrue) <- "integer"
-  temp=.C("getIspline",xtrue,lxtrue,knotseq,mat,numBases)
+  temp=.C("getIspline",xtrue,lxtrue,knotseq,mat,numBases,PACKAGE=BayesianMonoErrorModels)
   designMatrix=matrix(temp[[4]],ncol=numBases,nrow=lxtrue)
   return(designMatrix)
 
