@@ -51,7 +51,7 @@ void findDIATrue(double *gridx,double *weights,double *fit,double *M1Test, doubl
   
   for(x=*minDIA; x<*maxDIA; x++){
     for(y=x+1; y<*maxDIA; y++){
-      if((y-x)>=*minWidth & y-x<=*maxWidth){
+      if(((y-x)>=*minWidth) & ((y-x)<=*maxWidth)){
         test=calcLossTrueMin(x,y,gridx,weights,fit,*M1Test,*M2Test,*M1True,*M2True,*xsig,*ysig,*lgrid);
         if(test<max){max=test;*D1=x;*D2=y;*index=test;};
       }
