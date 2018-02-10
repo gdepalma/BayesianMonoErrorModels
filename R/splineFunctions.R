@@ -2,11 +2,15 @@
 
 getPRIORLLK_spline=function(coefs,smoothParam){
 
-  priorPcoef=dunif(smoothParam,0,2,log=T)
+  priorPcoef=dunif(smoothParam,0,3,log=T)
 
-  lpriorcoef = dlnorm(coefs[length(coefs)],1,100,log=T)
-  for(i in (length(coefs)-1):1)
-    lpriorcoef=lpriorcoef+dnorm(log(coefs[i]),coefs[i+1],smoothParam,log=T)
+  # lpriorcoef = dlnorm(coefs[length(coefs)],1,100,log=T)
+  # for(i in (length(coefs)-1):1)
+  #   lpriorcoef=lpriorcoef+dnorm(log(coefs[i]),coefs[i+1],smoothParam,log=T)
+
+  lpriorcoef = dlnorm(coefs[1],0,100,log=T)
+  for(i in 2:length(coefs))
+    lpriorcoef=lpriorcoef+dnorm(log(coefs[i]),log(coefs[i-1]),smoothParam,log=T)
 
   return(priorPcoef+lpriorcoef)
 }
